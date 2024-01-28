@@ -1,0 +1,50 @@
+﻿@*Nhận diện các file trong thư mục Models*@
+@using viettel_store.Models;
+@using X.PagedList.Mvc.Core; @*Phan trang*@
+@*Khai báo kiểu dữ liệu của Model*@
+@model X.PagedList.IPagedList<ItemUser>
+
+@{
+    // import file Layout.cshtml vào đây
+    Layout = "~/Areas/Admin/Views/Shared/Layout.cshtml";
+}
+
+<div class="col-md-12">
+    <div style="margin-bottom:5px;">
+        <a href="/Admin/Users/Create" class="btn btn-primary">
+            <i class="bi bi-person-fill-add"></i> Create
+        </a>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h1>List User</h1></div>
+        <div class="panel-body">
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Fullname</th>
+                    <th>Email</th>
+                    <th style="width:100px;">Action</th>
+                </tr>
+                @foreach (var row in Model)
+                {
+                    <tr>
+                        <td>@row.Name</td>
+                        <td>@row.Email</td>
+                        <td style="text-align:center;">
+                            <a href="/Admin/Users/Update/@row.Id"><i class="bi bi-tools" style="padding: 5px;"></i></a>&nbsp;
+                            <a href="/Admin/Users/Delete/@row.Id" onclick="return window.confirm('Are you sure?');"><i class="bi bi-trash" style="padding: 5px;"></i></a>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+            <style type="text/css">
+                .pagination {
+                    padding: 0px;
+                    margin: 15px 0;
+                }
+            </style>
+            @*Phân trang*@
+            @Html.PagedListPager(Model, page => Url.Action("Read", new { page = page, a = 1, b = 2 }) )
+        </div>
+    </div>
+</div>

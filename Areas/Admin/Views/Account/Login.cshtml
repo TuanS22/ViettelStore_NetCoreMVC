@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Đăng nhập tài khoản</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href="~/admin/css/dangnhap.css">
+    <link rel="stylesheet" href="~/Admin/font awesome/fontawesome-free-6.4.0-web/css/all.min.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/Admin/img/Logo_Viettel Store.png">
+</head>
+
+
+<body>
+    <section>
+        <div class="form-box">
+            <div class="form-value">
+                <form method="post" action="/Admin/Account/LoginPost">
+                    <h2>Đăng nhập</h2>
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="email" name="email" field_name="email" required>
+                        <label for="">Tài khoản</label>
+                    </div>
+                    <p class="error" id="error_email"></p>
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" name="password" field_name="mật khẩu" required>
+                        <label for="">Mật khẩu</label>
+                    </div>
+                    <p class="error" id="error_password"></p>
+                    <div class="forget">
+                        <label for=""><input type="checkbox">Nhớ mật khẩu</label>
+                        <label><a href="#">Quên mật khẩu</a></label>
+                    </div>
+                    <button type="submit" value="Đăng nhập">Đăng nhập</button>
+                    @*<div class="col-md-9"><input type="submit" value="Đăng nhập" class="btn btn-primary"></div>*@
+                    <div class="register">
+                        <p>Nếu bạn chưa có hãy <a href="./register.html">Đăng ký</a></p>
+                    </div>
+                    <div class="login_app">
+                        <i class="fa-brands fa-google fa-xl"></i>
+                        <i class="fa-brands fa-facebook fa-xl"></i>
+                        <i class="fa-brands fa-twitter fa-xl"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="~/admin/js/login.js"></script>
+</body>
+</html>

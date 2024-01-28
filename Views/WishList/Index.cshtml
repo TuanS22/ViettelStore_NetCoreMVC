@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "~/Views/Shared/LayoutTrangChu.cshtml";
+}
+@using viettel_store.Models
+@{
+    List<int> list_wish_list = ViewBag.list_wish_list as List<int>;
+}
+@functions {
+    public MyDbContext db = new MyDbContext();
+    public ItemProduct GetProduct(int id)
+    {
+        ItemProduct record = db.Products.Where(item => item.Id == id).FirstOrDefault();
+        return record;
+    }
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+<div class="container">
+@if (list_wish_list != null)
+{
+
+        <div class="main-content-area" style="margin-top:15px; min-height: auto;">
+            <div class="wrap-iten-in-cart">
+                <h2 class="panel-heading" style="font-weight: bold; font-size: 26px;">Danh sách sản phẩm yêu thích</h2>
+                <table class="table">
+                    <tr class="table-primary">
+                        <th style="width:100px; padding-left: 15px;">Photo</th>
+                        <th>Name</th>
+                        <th style="width:100px;">Price</th>
+                        <th style="width:100px;">Action</th>
+                    </tr>
+                    @foreach (var item in list_wish_list)
+                    {
+                        var product = GetProduct(item);
+                        <tr>
+                            <td class="product-image">
+                                <figure><img src="~/Upload/Products/@product.Photo" alt="" style="width: 100px;"></figure>
+                            </td>
+                            <td class="product-name">
+                                <a style="color: black; text-decoration: none; font-weight: bold;" class="link-to-product" href="/Products/Detail/@product.Id">@product.Name</a>
+                            </td>
+                            <td class="price-field produtc-price"><p class="price">$@string.Format("{0:#,#.}",(product.Price - (product.Price * product.Discount)/100))</p></td>
+                            <td style="position:relative;">
+                                <a href="/WishList/Remove/@product.Id" class="btn btn-delete" title="Remove" style="position:absolute; top:5px; left:10px;">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div><!--end main content area-->
+}
+else
+{
+    <h2 style="text-align:center">Chưa có sản phẩm yêu thích</h2>
+}
+</div>

@@ -1,0 +1,281 @@
+﻿@using viettel_store.Models
+@using System.Globalization
+
+@{
+	Layout = "~/Views/Shared/LayoutTrangChu.cshtml";
+}
+
+@functions {
+    public MyDbContext db = new MyDbContext();
+    // lay ten danh muc san pham -> join 3 bang voi nhau
+    
+}
+
+<link rel='stylesheet' type='text/css' media='screen' href='~/frontend/css/giohang.css'>
+
+<div class="container">
+    @if(!String.IsNullOrEmpty(Context.Request.Query["notify"]))
+    {
+        if (Context.Request.Query["notify"] == "destroy-success")
+        {
+            <h2 style="text-align: center;">Đã xóa toàn bộ sản phẩm thành công</h2>
+        }
+        if(Context.Request.Query["notify"] == "checkout-success")
+        {
+            <h2 style="text-align: center;">Đã thanh toán sản phẩm thành công</h2>
+        }
+    }
+
+    @if (Model.Count > 0)
+    {
+        <div class="content_cart">
+            <!-- Có bao nhiêu sản phẩm -->
+            <form method="post" action="/Cart/Update">
+                <div class="title_info mg_20 bd_bt">
+                    Có <span> @Cart.CartQuantity(Context.Session) sản phẩm </span> trong giỏ hàng
+                    <a href="/Cart/Destroy" style="float: right; margin-left: 30px; font-size: 14px;">
+                        <i class="fa-solid fa-trash-can-arrow-up"> Clear All</i>
+                    </a>
+                    <input style="float: right; font-size: 16px; margin-top: -5px;" type="submit" class="btn btn-update" value="Update Cart" />
+                </div>
+            
+            <!-- Thông tin sản phẩm 1 -->
+            <div class="products mb_20 bd_bt">
+                @foreach (var item_cart in Model)
+                {
+                    <div class="products_info disflex">
+                        <div class="product_info_left">
+                            <img src="/Upload/Products/@item_cart.ProductRecord.Photo" alt="" width="100%">
+                        </div>
+                        <div class="product_info_right">
+                            <div class="info_right_name disflex mb_20">
+                                <div class="w_70">
+                                    <a href="/Products/Detail/@item_cart.ProductRecord.Id">
+                                        @item_cart.ProductRecord.Name
+                                    </a>
+                                </div>
+                                <div class="info_right_number">
+                                    <div class="info_right_delete">
+                                        <div class="remove_product" style="margin-top: 3px">
+                                            <a href="/Cart/Remove/@item_cart.ProductRecord.Id" class="btn-remove" title="Remove">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </a>
+                                        </div>
+                                        <div class="quanlity">
+                                            <input type="number" name="product_@item_cart.ProductRecord.Id" value="@item_cart.Quantity" data-max="120" pattern="[0-9]*">
+                                        </div>
+                                    </div>
+                                    <div class="total_price color_red">
+                                            @{
+                                                decimal discountedPrice = Convert.ToInt32((item_cart.Quantity * (item_cart.ProductRecord.Price - (item_cart.ProductRecord.Price * item_cart.ProductRecord.Discount) / 100)));
+                                                string formatedDiscountedPrice = discountedPrice.ToString("C0", CultureInfo.GetCultureInfo("vi-VN"));
+                                            }
+                                            @formatedDiscountedPrice
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info_sale">
+                                <p>TRẢ GÓP/THANH TOÁN (Khách hàng chọn 01 trong các hình thức trả góp/thanh toán sau):</p>
+                                <p>- Trả góp 0% qua công ty tài chính (Áp dụng trên giá bán lẻ)</p>
+                                <p>- Trả góp kỳ hạn 06-12 tháng qua thẻ tín dụng (áp dụng trên giá khuyến mại)</p> <br>
+                                <p>
+                                    ƯU ĐÃI MUA KÈM:
+                                </p>
+                                <p>
+                                    - Giảm thêm 3,000,000đ cho khách hàng nâng cấp lên gói trả sau V1000S
+                                    (hoặc trợ giá tương đương 3 tháng cước cho các gói V120D, V150K, V300S, V500S, V700S hoặc trợ giá tương đương 6 tháng cước cho gói V120M, V150M, V300E)
+                                </p>
+                                <p>
+                                    - Thu cũ giá cao lên đến 20,000,000đ khi lên đời iPhone 14 Series
+                                </p>
+                                <p>
+                                    - Một đổi một trong vòng 60 ngày nếu lỗi do nhà sản xuất
+                                    (Áp dụng với Điện thoại (Samsung, iPhone); Máy tính bảng (Samsung, iPad); Đồng hồ thông minh (Apple Watch))
+                                </p>
+                                <p>
+                                    - Giảm giá 50% Sim số đẹp (không quá 200.000đ) (chỉ với Điện thoại)
+                                </p>
+                                <p>
+                                    - Ưu đãi đến 35% phí bảo hiểm Thiết bị di động, chỉ từ 165.000đ
+                                </p>
+                                <p>
+                                    - Ưu đãi bảo hiểm mở rộng: Chỉ từ 500đ/ngày thời gian bảo hành lên đến 24 tháng
+                                </p>
+                                <p>
+                                    - Giảm 10% cho khách hàng khi mua máy và sử dụng dịch vụ tại siêu thị áp dụng mua Gia dụng nhóm: Nồi chiên không dầu, Nồi áp suất điện tử và Nồi cơm điện tử
+                                </p>
+                            </div>
+                            <div class="view_more">
+                                <a href="#">
+                                    Đọc thêm
+                                    <i class="fa-solid fa-angle-down fa-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            </form>
+       
+        <!-- Thông tin người mua -->
+        <!-- <div class="mf_20">
+            <h4 style="margin-bottom: 10px;">Thông tin người nhận</h4>
+            <div class="choosegender">
+                <ul>
+                    <li>
+                        <input type="radio" checked="checked" id="gender1" name="gender" value="1">
+                        <label for="gender1">Anh</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="gender2" name="gender" value="2">
+                        <label for="gender2">Chị</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="customer_info">
+                <div class="customer_info_left">
+                    <div class="mb_20 mt_20">
+                        Họ và tên
+                        <span class="color_red">*</span> <br>
+                        <input type="text" name="" id="" placeholder="Họ và tên người nhận">
+                    </div>
+                    <div class="mb_20">
+                        Số điện thoại
+                        <span class="color_red">*</span> <br>
+                        <input type="text" name="" id="" placeholder="Số điện thoại người nhận">
+                    </div>
+                    <div class="mb_20">
+                        Email <br>
+                        <input type="text" list="emails" name="" id="" placeholder="Email người mua hàng">
+                        <datalist id="emails">
+                            <option value="gmail.com">
+                            <option value="gmail.com.vn">
+                        </datalist>
+                    </div>
+                    <div class="disflex titlt_vat">
+                        <i class="fa-solid fa-circle-info fa-xs"></i>
+                        <p>Vui lòng điền email để nhận thông tin chi tiết về đơn hàng và hóa đơn VAT (nếu có).</p>
+                    </div>
+                </div>
+                <div class="customer_info_right mt_20 mr_20">
+                    Lời nhắn <br>
+                    <input type="text" list="inboxs" id="" placeholder="Nhập nội dung">
+                    <datalist id="inboxs">
+                        <option value="Hãy chọn đúng màu">
+                        <option value="Hãy chọn đúng phiên bản">
+                        <option value="Tôi cần giao hàng nhanh">
+                        <option value="Tôi muốn tham khảo thêm">
+                    </datalist>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Hình thức -->
+        <!-- <div class="mg_20">
+            <h4 style="margin-bottom: 10px;">Hình thức nhận hàng</h4>
+            <div class="form_pay mb_20">
+                <div>
+                    <i class="fa-solid fa-truck-fast fa-lg"></i>
+                    <p>Giao hàng tận nơi</p>
+                </div>
+                <div>
+                    <i class="fa-solid fa-store fa-lg"></i>
+                    <p>Nhận hàng tại cửa hàng</p>
+                </div>
+            </div>
+            <div class="location_info">
+                <div class="location">
+                    <p class="fz_14">Tỉnh / Thành phố <span class="color_red">*</span></p>
+                    <div class="disflex">
+                        <span>Hà Nội</span>
+                        <i class="fa-solid fa-chevron-down fa-xs"></i>
+                    </div>
+                </div>
+                <div class="location">
+                    <p class="fz_14">Quận / Huyện <span class="color_red">*</span></p>
+                    <div class="disflex">
+                        <span>Chọn quận / huyện</span>
+                        <i class="fa-solid fa-chevron-down fa-xs"></i>
+                    </div>
+                </div>
+                <div class="location">
+                    <p class="fz_14">Phường / Xã <span class="color_red">*</span></p>
+                    <div class="disflex">
+                        <span>Chọn phường / xã</span>
+                        <i class="fa-solid fa-chevron-down fa-xs"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="mt_20 mb_20 customer_info_left">
+                <p class="fz_14">Địa chỉ <span class="color_red">*</span></p>
+                <input type="text" value="" placeholder="Nhập địa chỉ">
+            </div>
+            <div class="choosegender">
+                <ul>
+                    <li>
+                        <input type="checkbox" id="vat" value="1">
+                        <label for="vat" class="fz_14">Yêu cầu hóa đơn VAT</label>
+                    </li>
+                </ul>
+            </div>
+        </div> -->
+
+        <!-- Phương thức thanh toán -->
+        <!-- <div class="mg_20">
+            <h4 style="margin-bottom: 10px;">Phương thức thanh toán</h4>
+            <div class="form_pay mb_20">
+                <div>
+                    <i class="fa-brands fa-cc-paypal fa-lg"></i>
+                    <p>Thanh toán online</p>
+                </div>
+                <div>
+                    <i class="fa-regular fa-credit-card fa-lg"></i>
+                    <p>Chuyển khoản ngân hàng</p>
+                </div>
+                <div>
+                    <i class="fa-regular fa-money-bill-1 fa-lg"></i>
+                    <p>Thanh toán khi nhận hàng</p>
+                </div>
+            </div>
+        </div> -->
+        
+
+        <!-- Thành tiền -->
+        <div class="pay_products">
+            <div class="mg_20 disflex">
+                <div>
+                    <h4>Tổng tiền (<span>@Cart.CartQuantity(Context.Session)</span> sản phẩm)</h4>
+                    <a href="">
+                        <p class="fz_14 color_red">Chính sách hoàn tiền khi thanh toán</p>
+                    </a>
+                </div>
+                <div>
+                    <div class="total_all color_red mt_20">
+                        Tổng tiền: <span><b class="index">
+                                    @{
+                                        decimal discountedPrice1 = Convert.ToInt32(Cart.CartTotal(Context.Session));
+                                        string formatedDiscountedPrice1 = discountedPrice1.ToString("C0", CultureInfo.GetCultureInfo("vi-VN"));
+                                    }
+                                    @formatedDiscountedPrice1
+                        </b></span>
+                    </div>
+                    <div class="pay">
+                        <a href="/Cart/CheckOut" class="disflex">
+                            <i class="fa-solid fa-location-arrow"></i>
+                            <p>THANH TOÁN</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    }
+    else
+    {
+        <h2 style="text-align: center;">Hiện tại chưa có sản phẩm nào trong giỏ hàng</h2>
+    }
+    <!-- Điều khoản của Viettel Store -->
+    <div class="use_vt mg_20">
+        <p class="fz_12">Bằng cách đặt hàng, bạn đồng ý với <a href="" class="color_red">Điều khoản</a> sử dụng của Vietel Store</p>
+    </div>
+</div>

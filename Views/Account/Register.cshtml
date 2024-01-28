@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Đăng nhập tài khoản</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href="~/Admin/css/dangnhap.css">
+    <link rel="stylesheet" href="~/frontend/font awesome/fontawesome-free-6.4.0-web/css/all.min.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/frontend/img/Logo_Viettel Store.png">
+</head>
+<body>
+    <section>
+        <div class="form-box" style="height: 650px;">
+            <div class="form-value">
+                @if (!String.IsNullOrEmpty(Context.Request.Query["notify"]) && Context.Request.Query["notify"] == "email-exists")
+                {
+                    <div class="alert alert-danger">Email đã tồn tại</div>
+                }
+                @if (!String.IsNullOrEmpty(Context.Request.Query["notify"]) && Context.Request.Query["notify"] == "success")
+                {
+                    <div class="alert alert-danger">Đăng ký thành công</div>
+                }
+                <form action="/Account/RegisterPost" method="post">
+                    <h2>Đăng ký</h2>
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input onkeyup="keyupInput('Email')" type="email" name="Email" field_name="Email" required">
+                        <label for="">Email</label>
+                    </div>
+                    <p class="error" id="error_email"></p>
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input onkeyup="keyupInput('Password')" type="password" name="Password" field_name="mật khẩu" required>
+                        <label for="">Mật khẩu</label>
+                    </div>
+                    <p class="error" id="error_password"></p>
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input onkeyup="keyupInput('Name')" type="text" name="Name" field_name="họ tên" required>
+                        <label for="">Họ tên</label>
+                    </div>
+                    <p class="error" id="error_name"></p>
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input onkeyup="keyupInput('Phone')" type="text" name="Phone" field_name="điện thoại" required>
+                        <label for="">Điện thoại</label>
+                    </div>
+                    <p class="error" id="error_phone"></p>
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input onkeyup="keyupInput('Address')" type="text" name="Address" field_name="địa chỉ" required>
+                        <label for="">Địa chỉ</label>
+                    </div>
+                    <p class="error" id="error_address"></p>
+                    <button type="submit" value="Đăng nhập">Đăng ký</button>
+                    <div class="forget">
+                        <label for=""><a href="/Account/Login">Bạn đã có tài khoản</a></label>
+                    </div>
+                    <div class="login_app">
+                        <i class="fa-brands fa-google fa-xl"></i>
+                        <i class="fa-brands fa-facebook fa-xl"></i>
+                        <i class="fa-brands fa-twitter fa-xl"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>

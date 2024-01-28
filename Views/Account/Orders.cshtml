@@ -1,0 +1,93 @@
+﻿@{
+    Layout = "~/Views/Shared/LayoutTrangChu.cshtml";
+}
+
+@* de phan trang thi phai using cac doi tuong sau *@
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@* doi tuong thao tac file *@
+@using System.IO
+@* nhin thay file MyDbContext *@
+@using viettel_store.Models
+@functions {
+    public MyDbContext db = new MyDbContext();
+    public ItemCustomer GetCustomers(int _CustomerId)
+    {
+        //lay mot ban ghi
+        ItemCustomer record = db.Customers.Where(item => item.Id == _CustomerId).FirstOrDefault();
+        return record != null ? record : new ItemCustomer();
+    }
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
+<div class="col-md-12" style="width: 1200px; margin-left: 10%; margin-top: 10px;">
+    <div class="panel panel-primary">
+        <h2 class="panel-heading" style="font-weight: bold; font-size: 26px;">Danh sách đơn hàng</h2>
+        <div class="panel-body">
+            <table class="table">
+                <tr class="table-primary">
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Created</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th style="width:150px;"></th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    ItemCustomer recordCustomer = GetCustomers(item.CustomerId);
+                    <tr>
+                        <td>@recordCustomer.Name</td>
+                        <td>@recordCustomer.Address</td>
+                        <td>@recordCustomer.Phone</td>
+                        <td>@item.Create.ToString("ddMMyyyy")</td>
+                        <td>@string.Format("{0:#,#.}", item.Price)</td>
+                        <td>
+                            @if (item.Status == 2)
+                            {
+                                <text><label class="bg-danger">Đã hủy đơn hàng</label></text>
+                            }
+                            @if (item.Status == 1)
+                            {
+                                <text><label class="bg-success">Đã giao hàng</label></text>
+                            }
+                            @if (item.Status == 0)
+                            {
+                                <text><label class="bg-warning">Chưa giao hàng</label></text>
+                            }
+                        </td>
+                        <td style="text-align:center;">
+                            <a href="/Account/Detail/@item.Id">Chi tiết</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <style type="text/css">
+
+                label {
+                    font-size: 12px;
+                    font-weight: bold;
+                    border-radius: 10px;
+                    padding: 2px 5px;
+                }
+
+                .pagination {
+                    padding: 0px;
+                    margin: 0px;
+                }
+
+                .active {
+                    background: #cfe2ff;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                }
+
+            </style>
+            @* ham sau se thuc hien viec hien thi phan trang *@
+            @Html.PagedListPager((IPagedList)Model, p => Url.Action("Index", new { page = p }))
+        </div>
+    </div>
+</div>
